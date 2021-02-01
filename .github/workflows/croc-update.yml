@@ -1,0 +1,44 @@
+name: Update croc
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-croc:
+    name: Update croc
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Fetch latest croc release
+        id: croc
+        run: |
+          echo ::set-output name=release_tag::$(curl -sL https://api.github.com/repos/schollz/croc/releases/latest | jq -r ".tag_name" | cut -c 2-)
+          echo ::set-output name=current_tag::$(< croc.version)
+
+      - name: Update croc version
+        if: steps.croc.outputs.current_tag != steps.croc.outputs.release_tag
+        run: |
+          echo ${{ steps.croc.outputs.release_tag }} > croc.version
+
+      - name: Create pull request
+        if: steps.croc.outputs.current_tag != steps.croc.outputs.release_tag
+        uses: peter-evans/create-pull-request@v3
+        with:
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: Update croc from ${{ steps.croc.outputs.current_tag }} to ${{ steps.croc.outputs.release_tag }}
+          title: Update croc from ${{ steps.croc.outputs.current_tag }} to ${{ steps.croc.outputs.release_tag }}
+          body: |
+            Updates [schollz/croc](https://github.com/schollz/croc) from ${{ steps.croc.outputs.current_tag }} to ${{ steps.croc.outputs.release_tag }}
+          labels: |
+            🛶 upstream
+            🤖 bot
+          branch: schollz/croc-${{ steps.croc.outputs.release_tag }}
+          delete-branch: true
