@@ -41,20 +41,14 @@ jobs:
 
       - name: Set Docker image metadata
         id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
+        uses: crazy-max/ghaction-docker-meta@v2.1.1
         with:
           images: thecatlady/croc,ghcr.io/thecatlady/croc
-          tag-custom-only: true
-          tag-custom: |
+          flavor: |
+            latest=true
+          tags: |
             ${{ steps.croc.outputs.version }}
-            latest
-          label-custom: |
-            maintainer=TheCatLady
-            org.opencontainers.image.title=croc
-            org.opencontainers.image.description=A lightweight, minimal croc container
-            org.opencontainers.image.url=https://github.com/TheCatLady/docker-croc
-            org.opencontainers.image.documentation=https://github.com/TheCatLady/docker-croc
-            org.opencontainers.image.source=https://github.com/TheCatLady/docker-croc
+          labels: |
             org.opencontainers.image.version=${{ steps.croc.outputs.version }}
 
       - name: Log in to Docker Hub
