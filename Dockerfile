@@ -7,7 +7,7 @@ RUN         curl -#L -o croc.tar.gz https://api.github.com/repos/schollz/croc/ta
             go get -d && \
             go build -ldflags="-s -w" -o /usr/bin/croc
 
-FROM        alpine:3.14.2
+FROM        alpine:3.14.3
 RUN         apk add --update --no-cache tini
 COPY        --from=BUILD_IMAGE /usr/bin/croc /usr/bin/croc
 ENTRYPOINT  ["/sbin/tini", "--", "/usr/bin/croc"]
