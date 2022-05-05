@@ -41,7 +41,7 @@ jobs:
 
       - name: Set Docker image metadata
         id: docker_meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: thecatlady/croc,ghcr.io/thecatlady/croc
           flavor: |
