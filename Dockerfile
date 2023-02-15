@@ -1,4 +1,4 @@
-FROM        golang:1.19.3-alpine3.16 AS BUILD_IMAGE
+FROM        golang:1.20.1-alpine3.16 AS BUILD_IMAGE
 RUN         apk add --update --no-cache curl
 WORKDIR     /go/src/github.com/schollz/croc
 COPY        croc.version .
